@@ -24,7 +24,8 @@ int main(){
 
 	year_month_day ymd{year{y}, month{m}, day{d}};
 
-	Person I("Andrey", "Chernyaev", ymd);
+	Share::Person I("Andrey", "Chernyaev", ymd);
+
 	cout << I.ToString();
 
 	I.set_name("NeAndrey");	
@@ -34,7 +35,7 @@ int main(){
 
 	cout << I.ToString();
 
-	cout << I.get_name() << '\t'<<I.get_surname()<<'\t'<<I.get_birthday();
+	cout << I.get_name() << '\t'<<I.get_surname()<<'\t'<< I.get_birthday();
 
 
 

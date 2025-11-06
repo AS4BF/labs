@@ -3,7 +3,12 @@
 #include <chrono>
 #include <iostream>
 #include "../Interface/to_string.h"
+#include "../Interface/equals.h"
+#include "../Interface/hash.h"
+#include <functional>
 #include <format>
+
+namespace Share{
 
 using std::string;
 using std::chrono::time_point;
@@ -13,7 +18,7 @@ using ymd = std::chrono::year_month_day;
 using std::chrono::floor;
 using std::endl;
 
-class Person : ToStr {
+class Person : ToStr, Equals<Person>, HashCode {
 private:
 	string Name;
 	string Surname;	
@@ -55,6 +60,39 @@ public:
 		return std::format("Name: {}\nSurname: {}\n", 
 				Name, Surname);
 	};
+
+	bool equals(const Person& rhs) const override {
+		return (Name == rhs.Name) && (Surname == rhs.Surname) && (Birthday == rhs.Birthday); 
+	};	
+	
+	bool operator==(const Person& rhs) {
+		return equals(rhs);	
+	};
+
+	bool operator!=(const Person& rhs) {
+		return !equals(rhs);
+	};
+	
+	int GetHashCode() const override {
+		auto res = std::hash<string>{}(Name);
+		size_t factor = 997;
+		res = res * factor 
+			+ std::hash<string>{}(Surname);
+	        res = res * factor
+		       + std::hash<int>{}(static_cast<int>(Birthday.year()))
+		       + std::hash<int>{}(static_cast<int>(Birthday.month()))
+		       + std::hash<int>{}(static_cast<int>(Birthday.day()));				
+
+		return res; 		
+	};
+
+	Person DeepCopy() const {
+		return Person(Name, Surname, Birthday);
+	};
+
+
+};
+
 };
 
 #endif
