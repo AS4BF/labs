@@ -18,7 +18,7 @@ using ymd = std::chrono::year_month_day;
 using std::chrono::floor;
 using std::endl;
 
-class Person : ToStr, Equals<Person>, HashCode {
+class Person : ToStr, public Equals<Person>, HashCode {
 private:
 	string Name;
 	string Surname;	
@@ -80,8 +80,8 @@ public:
 			+ std::hash<string>{}(Surname);
 	        res = res * factor
 		       + std::hash<int>{}(static_cast<int>(Birthday.year()))
-		       + std::hash<int>{}(static_cast<int>(Birthday.month()))
-		       + std::hash<int>{}(static_cast<int>(Birthday.day()));				
+		       + std::hash<int>{}(static_cast<unsigned>(Birthday.month()))
+		       + std::hash<int>{}(static_cast<unsigned>(Birthday.day()));				
 
 		return res; 		
 	};
