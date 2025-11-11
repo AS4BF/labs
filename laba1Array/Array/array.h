@@ -3,42 +3,94 @@
 #include <utility>
 #include <string>
 
+namespace Share{
+
 using std::string;
 
 template<typename T>
 class arr_t{
-private:
-	T* p_;
 public:
-	size_t size_;
+	size_t size_; //first initialization
+private: //private val
+	T* p_;
+private: 
+	//simple use std::swap
+	void swap_rref(arr_t<T>&& other) {
+		if(this != &other) {
+			T* tmp = p_;
+
+			p_ = other.p_;
+			size_ = other.size_;		
+
+			other.p_ = tmp; //use to delete tmp in other and dont call delete[] here 
+		};	
+	};
+
+public:
 	
 	arr_t() : p_{nullptr}, size_(0) {}
-
-	//perfect forwarding 
-	arr_t(T*&& p, const size_t& sz) : p_{std::forward<T*>(p)}, size_{sz} {}
+	
+	arr_t(const size_t& sz) : size_{sz}, p_{new T[size_]} {}
 
 	T& operator[](const size_t& num) const {
 		return p_[num];
 	};
-
-	arr_t<T>& operator=(arr_t<T>&& other){
+	
+	//safe copy
+	void copy(const arr_t<T>& other){
 
 		if(this != &other){
-			delete[] p_;
-			p_ = other.p_;
+
+			T* tmp = p_;
+			size_t tmpsz = size_;
+
 			size_ = other.size_;
-			other.p_ = nullptr;
-			other.size_ = 0;
+			p_ = new T[size_];
+			
+			try{	
+				for(int i = 0; i != other.size_; ++i)
+				{
+					p_[i] = other[i];	
+				};
+			} catch(...) { //don't understand what type of exception throw op= of type T
+				delete [] p_;
+				p_ = tmp;
+				size_ = tmpsz;
+				throw; //maybe throw bad_copy
+			}; // в случае ошибки копирования оставляет объект в согласованном состоянии	
+
+			delete [] tmp;
 		};
 
+	};
+#ifdef OPTIMIZE
+	arr_t<T>& operator=(arr_t<T>&& other){
+		swap_rref(std::move(other));
 		return *this;
 	};
 
+	arr_t(arr_t<T>&& other) : p_{other.p_}, size_{other.size_} {
+		other.p_ = nullptr;
+		other.size_ = 0;
+	};
+#endif
 
+	arr_t<T>& operator=(const arr_t<T>& other) {
+		copy(other);
+		return *this;	
+	};
+
+	arr_t(const arr_t<T>& other) : arr_t() {
+		copy(other);
+	};
+
+	
 
 	~arr_t(){
 		delete[] p_;	
 	};
+};
+
 };
 
 #endif

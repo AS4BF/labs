@@ -5,6 +5,7 @@
 #include <utility>
 #include <chrono>
 #include <format>
+#include <cstdlib>
 #include "../laba1Person/Person/person.h"
 #include "./Array/array.h"
 
@@ -21,10 +22,10 @@ pair<int, int> toRowAndCol(const string& expr, const string& delimiter){
 	
 	size_t del = expr.find(delimiter, 0); 			
 	return pair<int, int>(
-			stoi(
+			std::stoi(
 				expr.substr(0, del)
 				), 
-	 stoi(
+	 std::stoi(
 		 expr.substr(del + delimiter.length(), expr.end() - expr.begin())
 		 )
 	 );
@@ -74,13 +75,12 @@ int main(){
 	       	if(size & col) { sub.push(col); }
        	};
 	
-	arr_t<arr_t<Type>> stepped(new arr_t<Type>[sub.size()], sub.size());
+	Share::arr_t<Share::arr_t<Type>> stepped(sub.size());
 	//тут хорошо было бы использовать аллокатор что изначально выделил бы память размером row*col+размер hedera(структур что хранят данные о row и массиве в целом), но это не наш путь 
 	//создание строк 
 	
 	for(auto row = 0; row != stepped.size_; row++) {
-	       	stepped[row] = arr_t<Type>(new Type[sub.top()]{},
-				       	sub.top());
+	       	stepped[row] = Share::arr_t<Type>(sub.top());
 
 		cout << "stepped row size "  << stepped[row].size_ << endl; sub.pop();
        	};

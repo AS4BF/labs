@@ -7,13 +7,12 @@
 
 using std::string;
 using std::chrono::days;
-using std::chrono::system_clock;
 using ymd = std::chrono::year_month_day;
 using std::chrono::floor;
 using std::endl;
 
 class Person : ToStr {
-protected: //что бы в будущем классы наследники имели доступ к полям Person при public наследовании, отношение is-a
+protect: //что бы в будущем классы наследники имели доступ к полям Person при public наследовании, отношение is-a
 	string Name;
 	string Surname;	
 	ymd Birthday;
