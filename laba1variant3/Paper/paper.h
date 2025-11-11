@@ -1,12 +1,12 @@
 #ifndef PAPER_H
 #define PAPER_H
 #include <string>
-#include "../../laba1Person/Person/Person.h"
+#include "../../laba1Person/Person/person.h"
 #include "../../laba1Person/Interface/to_string.h"
 #include <chrono>
 #include <format>
 
-namespace Variant3 {
+namespace variant3 {
 
 using std::string;
 using std::chrono::days;
@@ -35,7 +35,7 @@ public:
 	set_author(const Person& author) { author_ = author; };
 
 	void
-	set_date(const ymd& date) { date_ = date};
+	set_date(const ymd& date) { date_ = date; };
 
 	Paper() : name_{"None"}, author_{}, date{floor<days>(system_clock::now())} {};
 
