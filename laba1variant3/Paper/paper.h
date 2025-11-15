@@ -37,14 +37,14 @@ public:
 	void
 	set_date(const ymd& date) { date_ = date; };
 
-	Paper() : name_{"None"}, author_{}, date{floor<days>(system_clock::now())} {};
+	Paper() : name_{"None"}, author_{}, date_{floor<days>(system_clock::now())} {};
 
-	Paper(const string& name, const Person author, const ymd& date) : name_{name}, author_{author_}, date_{date} {};
+	Paper(const string& name, const Person author, const ymd& date) : name_{name}, author_{author}, date_{date} {};
 
 	string
 	ToString() const override {
-		return std::format("Paper name: {}\nPaper date: {}\nAuthor:\n", name_, date_, author_.ToString());
-	}
+		return std::format("Paper name: {}\nPaper date: {}\nAuthor:\n{}\n", name_, date_, author_.ToString());
+	};
 		
 };
 

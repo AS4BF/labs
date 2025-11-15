@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include "../laba1Person/Person/person.h"
 #include "./Array/array.h"
+#include "speedtest.h"
 
 using std::cin;
 using std::cout;
@@ -16,7 +17,6 @@ using std::string;
 using std::stack;
 using std::pair;
 using Type = Person;
-
 
 pair<int, int> toRowAndCol(const string& expr, const string& delimiter){
 	
@@ -31,20 +31,6 @@ pair<int, int> toRowAndCol(const string& expr, const string& delimiter){
 	 );
 	
 };
-
-template<typename T>
-auto timeToComplite(const T& arr, size_t row, size_t col) {
-
-	auto start = std::chrono::steady_clock::now();
-
-	auto value = arr[row][col];
-	
-	auto end = std::chrono::steady_clock::now();
-	std::chrono::duration<double> elapsed = end - start;
-
-	return pair(value, elapsed.count()); 
-}
-
 
 int main(){
 	
@@ -86,33 +72,31 @@ int main(){
        	};
 
 	cout << endl;
-	
+
+
 	size_t row = stepped.size_-1;
 	size_t col = stepped[row].size_-1;
-	auto valtime = timeToComplite(stepped, row, col);
+	
+	auto func = [](auto&&... args){ return Share::get_to_array(std::forward<decltype(args)>(args)...); };
+
+	auto time = speedtest::speed(func, stepped, row, col);
 
 
-	cout << "stepped value: " <<  valtime.first.ToString() 
-	       	<< "Time: "	<< valtime.second << endl;
+	cout << "stepped\n"  << "Time: " << time << endl;
 
 	row = nrow-1;
 	col = ncol-1;
-	valtime = timeToComplite(twodarray, row, col);
-
-	cout << "twodarray value: " <<  valtime.first.ToString() 
-	       	<< "Time: "	<< valtime.second << endl;
 
 	
-	auto start = std::chrono::steady_clock::now();
 
-	auto value = onearray[row*col-1];
+	time = speedtest::speed(func, twodarray, row, col);
+
+	cout << "twodarray\n" << "Time: " << time << endl;
+
 	
-	auto end = std::chrono::steady_clock::now();
+	time = speedtest::speed(func, onearray, row*col-1);
 
-	std::chrono::duration<double> elapsed = end - start;
-
-	cout << "onedarray value: " <<  value.ToString() 
-	       	<< "Time: "	<< elapsed.count() << endl;
+	cout << "onedarray\n" << "Time: " << time << endl;
 
 
 	delete[] onearray;

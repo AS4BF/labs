@@ -23,7 +23,7 @@ class ResearchTeam : ToStr{
 	vector<Paper> papers_;
 private:	
 	void	
-	vec_to_str(string&& res) const 
+	vec_to_str(string& res) const 
 	{
 
 		int i = 1;
@@ -52,8 +52,8 @@ private:
 
 public:
 	//ctor default init vector	
-	ResearchTeam(const string& topic, const string& organization, const int& rnum, const TimeFrame& duration) : topic_{topic}, organization_{organization}, rnum_{rnum}, duration_{duration} {};
-	ResearchTeam() topic_{"None topic"}, organization_{"None organization"}, rnum_{0}, duration_{TimeFrame::Long} {};
+	ResearchTeam(const string& topic, const string& organization, const unsigned int& rnum, const TimeFrame& duration) : topic_{topic}, organization_{organization}, rnum_{rnum}, duration_{duration} {};
+	ResearchTeam() : topic_{"None topic"}, organization_{"None organization"}, rnum_{0}, duration_{TimeFrame::Long} {};
 
 	const auto&
 	get_topic() const noexcept { return topic_; };	
@@ -68,7 +68,7 @@ public:
 	get_duration() const noexcept { return duration_; };
 
 	const auto&
-	get_papers() const noexcept { return papes_; };
+	get_papers() const noexcept { return papers_; };
 
 	void
 	set_topic(const string& topic) { topic_ = topic; };
@@ -97,9 +97,9 @@ public:
 
 		for(auto it = papers_.cbegin() + 1;  
 				it != papers_.cend();
-		 		it++)
+		 		++it)
 		{
-			if(comp(*it, *latest) { latest = it; };
+			if(comp(*it, *latest)) { latest = it; };
 		};
 
 		return *latest;
@@ -122,7 +122,7 @@ public:
 	ToShortString() const 
 	{
 
-		string res = std::format("Research topic: {}\n organization: {}\n registration number: {}\nduration: {}\n",
+		string res = std::format("Research topic: {}\norganization: {}\nregistration number: {}\nduration: {}\n",
 				topic_, organization_, rnum_, frame_to_str());
 		return res;
 	};

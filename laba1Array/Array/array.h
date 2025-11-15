@@ -5,6 +5,25 @@
 
 namespace Share{
 
+using std::pair;
+
+
+//условие остановки рекурсии - взяли последний аргумент из args.
+template<typename T, typename First> 
+auto get_to_array(const T& arr, First&& first) {
+	
+	auto value = arr[first];
+	
+	return value;
+};
+
+template<typename T, typename First, typename... Args>
+auto get_to_array(const T& arr, First&& first, Args&&... args) {
+	auto value = arr[first];
+	
+	return get_to_array(value, std::forward<Args>(args)...);
+};
+
 using std::string;
 
 template<typename T>
