@@ -6,8 +6,8 @@
 #include <chrono>
 #include <format>
 #include <cstdlib>
-#include "../laba1Person/Person/person.h"
-#include "./Array/array.h"
+#include "person.h"
+#include "array.h"
 #include "speedtest.h"
 
 using std::cin;
@@ -16,7 +16,7 @@ using std::endl;
 using std::string;
 using std::stack;
 using std::pair;
-using Type = Person;
+using Type = Share::Person;
 
 pair<int, int> toRowAndCol(const string& expr, const string& delimiter){
 	

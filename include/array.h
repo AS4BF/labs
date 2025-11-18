@@ -10,18 +10,13 @@ using std::pair;
 
 //условие остановки рекурсии - взяли последний аргумент из args.
 template<typename T, typename First> 
-auto get_to_array(const T& arr, First&& first) {
-	
-	auto value = arr[first];
-	
-	return value;
+auto get_to_array(const T& arr, First&& first){
+	return arr[first];	
 };
 
 template<typename T, typename First, typename... Args>
-auto get_to_array(const T& arr, First&& first, Args&&... args) {
-	auto value = arr[first];
-	
-	return get_to_array(value, std::forward<Args>(args)...);
+auto get_to_array(const T& arr, First&& first, Args&&... args){
+	return get_to_array(arr[first], std::forward<Args>(args)...);	
 };
 
 using std::string;

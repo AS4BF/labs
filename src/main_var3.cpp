@@ -5,11 +5,11 @@
 #include <chrono>
 #include <utility>
 #include <stack>
-#include "../laba1Person/Person/person.h"
-#include "./ResearchTeam/research_team.h"
-#include "./Paper/paper.h"
-#include "../laba1Array/Array/array.h"
-#include "../laba1Array/speedtest.h"
+#include "person.h"
+#include "research_team.h"
+#include "paper.h"
+#include "array.h"
+#include "speedtest.h"
 
 using std::cin;
 using std::cout;
@@ -18,15 +18,16 @@ using std::format;
 using std::stack;
 using std::chrono::month;
 using std::chrono::year;
-using std::chrono::year_month_day;
+using ymd = std::chrono::year_month_day;
 using std::chrono::day;
 using std::chrono::floor;
 using std::chrono::ceil;
 using std::chrono::days;
 using std::pair;
-using namespace variant3;
 
 
+
+using RT = variant3::ResearchTeam;
 
 pair<int, int> toRowAndCol(const string& expr, const string& delimiter){
 	
@@ -45,20 +46,21 @@ pair<int, int> toRowAndCol(const string& expr, const string& delimiter){
 
 
 int main(){
-	ResearchTeam KF{};
+
+	RT KF{};
 	
 	cout << std::format("Index: Year value is {}\nIndex: TwoYear value is {}\nIndex: Long value is {}\n",
-		       	KF[TimeFrame::Year], KF[TimeFrame::TwoYear], KF[TimeFrame::Long]);
+		       	KF[variant3::TimeFrame::Year], KF[variant3::TimeFrame::TwoYear], KF[variant3::TimeFrame::Long]);
 
 	KF.set_topic("Физика и техника полупроводников ");
 	KF.set_org("Полоцкий Государственный университет");
-	KF.set_duration(TimeFrame::Year);
+	KF.set_duration(variant3::TimeFrame::Year);
 
-	Person Vabick("Sergey", "Vabichevich", ymd{year{1965}, month{1}, day{1}});	
+	Share::Person Vabick("Sergey", "Vabichevich", ymd{year{1965}, month{1}, day{1}});	
 	
-	std::vector<Paper> papers = {
-		Paper{string{"Adhesion of Diazoquinone–Novolac Photoresist Films Implanted with Boron and Phosphorus Ions to Single-Crystal Silicon"},
-		       	Vabick, ymd{year{2020}, month{1}, day{1}}}, Paper{}, Paper{} };
+	std::vector<variant3::Paper> papers = {
+		variant3::Paper{string{"Adhesion of Diazoquinone–Novolac Photoresist Films Implanted with Boron and Phosphorus Ions to Single-Crystal Silicon"},
+		       	Vabick, ymd{year{2020}, month{1}, day{1}}}, variant3::Paper{}, variant3::Paper{} };
 		
 
 	KF.set_papers(papers);
@@ -66,8 +68,8 @@ int main(){
 
 	cout << KF.ToString() << endl;
 
-	papers.push_back(Paper("Late", Person{},
-			       	ymd{ceil<days>(system_clock::now())})
+	papers.push_back(variant3::Paper("Late", Share::Person{},
+			       	ymd{ceil<days>(std::chrono::system_clock::now())})
 			);
 
 	KF.AddPapers(papers);
@@ -78,7 +80,7 @@ int main(){
 
 	cout << KF.get_late_date_paper().ToString() << endl;
 
-	using Type = Paper; //мне лень выводить это всё в отдельный .h и функции
+	using Type = variant3::Paper; 
 	
 	string nrowcol;
 	string delimiter = "*";

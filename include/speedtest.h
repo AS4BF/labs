@@ -5,8 +5,6 @@
 
 namespace speedtest{
 
-
-
 decltype(auto) speed(auto&& func, auto&&... Args){
 	auto start = std::chrono::steady_clock::now();
 	
@@ -19,7 +17,6 @@ decltype(auto) speed(auto&& func, auto&&... Args){
 	std::chrono::duration<double> elapsed = end - start;
 	return elapsed;
 };
-
 
 };
 #endif
