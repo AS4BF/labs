@@ -20,13 +20,13 @@ Team::set_rnum(const unsigned int& rnum) noexcept {
 	rnum_ = rnum;	
 };
 
-typename Team
+typename variant3::Team
 Team::DeepCopy() const {
 	return Team(name_, rnum_);
 };
 
 bool
-Team::equals(const Team& rhs) const {
+Team::equals(const variant3::Team& rhs) const noexcept {
 	return (rhs.name_ == name_) && (rhs.rnum_ == rnum_);
 };
 
@@ -42,13 +42,14 @@ Team::operator!=(const Team& rhs) const noexcept {
 
 int
 Team::GetHashCode() const {
-	auto res = std::hash<string>(name_);	
+	auto res = std::hash<string>{}(name_);	
 	auto factor = 997u;
-	res = res * factor + std::hash<unsigned>(rnum_);
+	res = res * factor + std::hash<unsigned int>{}(rnum_);
 	return res;
-};
+
+}; 
 
 string 
 Team::ToString() const {
-	return std::format("Name: {}, reg num: {}" name_, rnum_);
+	return std::format("Name: {}, reg num: {}", name_, rnum_);
 };
