@@ -4,7 +4,8 @@
 #include <vector>
 #include <algorithm>
 #include "paper.h"
-#include "to_string.h"
+#include "person.h"
+#include "team.h"
 #include <format>
 #include <iterator>
 
@@ -15,16 +16,16 @@ using std::vector;
 
 enum class TimeFrame{ Year, TwoYear, Long };
 
-class ResearchTeam : ToStr{
+class ResearchTeam : public Team {
 	string topic_;
-	string organization_;
-	unsigned int rnum_;
 	TimeFrame duration_;
-	vector<Paper> papers_;
+
+	vector<Share::Person> persons_;	
+	vector<variant3::Paper> papers_;
 private:	
-	void	
-	vec_to_str(string& res) const;
-	
+	template<typename T> void	
+	vec_to_str(const vector<T>& vec, string& res) const;
+		
 	string
 	frame_to_str() const;
 
@@ -37,10 +38,7 @@ public:
 	get_topic() const noexcept;	
 	
 	const string&
-	get_org() const noexcept;
-
-	const unsigned int&
-	get_rnum() const noexcept;
+	get_org_name() const noexcept;
 
 	const TimeFrame&
 	get_duration() const noexcept;
@@ -52,7 +50,7 @@ public:
 	set_topic(const string& topic);
 
 	void
-	set_org(const string& organization);
+	set_org_name(const string& organization);
 
 	void
 	set_duration(const TimeFrame& duration);
@@ -68,13 +66,31 @@ public:
 	operator[] (const TimeFrame& index) const;
 
 	void 
-	AddPapers(vector<Paper>& papers);
+	AddPapers(vector<variant3::Paper>& papers);
+
+	const vector<Share::Person>&
+	get_persons() const ;
+
+	void
+	set_persons(vector<Share::Person>& persons);
+	
+	void	
+	AddMembers(vector<Share::Person>& persons);
+
+	void
+	set_team(const Team& team);
+
+	Team
+	get_team() const ;
 
 	virtual string 
 	ToShortString() const;
 
 	string
 	ToString() const override;
+
+	ResearchTeam*
+	DeepCopy() const override;
 
 };
 
