@@ -80,7 +80,7 @@ Per::GetHashCode() const {
 
 T
 Per::DeepCopy() const {
-	return Person(Name, Surname, Birthday);
+	return Person(*this); //copy ctor
 };
 
 
