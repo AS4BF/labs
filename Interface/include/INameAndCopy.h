@@ -9,17 +9,17 @@ template<typename Derived>
 class INameAndCopy
 {
 protected:
-string Name_;
+string name_;
 public:
-INameAndCopy(const string& name) : Name{name} {};
+INameAndCopy(const string& name) : name_{name} {};
 
 const string&
-get_name() const { return Name_; };
+get_name() const { return name_; };
 
 void
-set_name(const string& name) { Name_ = name; };
+set_name(const string& name) { name_ = name; };
 
-virtual Derived DeepCopy() const = 0;
+virtual Derived* DeepCopy() const = 0; //* для обеспечения ковариантности, просто Derived подвержен срезки
 
 virtual ~INameAndCopy() {};
 };

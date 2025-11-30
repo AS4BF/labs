@@ -8,8 +8,6 @@ using std::string;
 class ToStr{
 public:
 	virtual string ToString() const = 0;
-	virtual ~ToStr() {};
-
 };
 
 };

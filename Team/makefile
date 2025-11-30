@@ -1,16 +1,18 @@
 FLAGS ?= -O2 --std=c++20
 CXX ?= g++
 
-INCLUDEDIR=-I./include -I../Interface/include/
+INCLUDEDIR=-I./include -I../Interface/include/ -I../Paper/include -I../Person/include
 FLAGS += $(INCLUDEDIR)
 
 SRCDIR=src
 OBJDIR=../build
-CXXSRC=$(SRCDIR)/person.cpp
+
+CXXSRC=$(SRCDIR)/research_team.cpp $(SRCDIR)/team.cpp
 
 CXXOBJ:=$(addprefix $(OBJDIR)/,$(CXXSRC:.cpp=.o))
 DEPS=$(CXXOBJ:.o=.d)
 
+all: $(CXXOBJ)
 
 $(CXXOBJ):$(OBJDIR)/%.o : %.cpp
 	@mkdir -p $(@D)

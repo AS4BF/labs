@@ -1,10 +1,10 @@
 #ifndef PAPER_H
 #define PAPER_H
 #include <string>
-#include "to_string.h"
-#include "person.h"
 #include <chrono>
 #include <format>
+#include "to_string.h"
+#include "person.h"
 
 namespace variant3 {
 
@@ -36,6 +36,7 @@ public:
 
 	void
 	set_date(const ymd& date); 
+
 
 	Paper(); 
 

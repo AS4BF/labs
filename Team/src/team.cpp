@@ -20,9 +20,9 @@ Team::set_rnum(const unsigned int& rnum) noexcept {
 	rnum_ = rnum;	
 };
 
-typename variant3::Team
+typename variant3::Team*
 Team::DeepCopy() const {
-	return Team(name_, rnum_);
+	return new Team(name_, rnum_);
 };
 
 bool

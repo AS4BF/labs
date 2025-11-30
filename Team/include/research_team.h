@@ -41,33 +41,43 @@ public: //iterators
 	class PersonComp : public Comparator<pointer<Share::Person>> {
 		bool operator()(pointer<Share::Person>) { return true; };
 	};
+	
+	using system_clock = std::chrono::system_clock;
+	using days = std::chrono::days;
+	using tp_sy_days = std::chrono::time_point<system_clock, days>;
 
-
-/*
 	class DateComp : public PaperComp {
 	public:
-		ymd current_date;
-	}
+		tp_sy_days current_date = std::chrono::floor<days>(system_clock::now());
+	};
 
 	class deltaDateComp : public DateComp {
-		years delta;	
-		bool operator(pointer<variant3::Paper>& tmp)() override;	
+	public:
+		days delta;	
+		bool operator()(pointer<variant3::Paper>& tmp) override;	
+	};
+	
+	class LastYearPaper : public DateComp {
+		tp_sy_days current_date = std::chrono::floor<days>(system_clock::now());
+		bool operator()(pointer<variant3::Paper>& tmp) override;
+	};
+	
+	class dontHavePaper: public PersonComp {
+	private:
+		ResearchTeam& team_;
+	public:
+		dontHavePaper(ResearchTeam& team) : team_{team} {};
+		bool operator()(pointer<Share::Person>& tmp) override;
 	};
 
-	class LastYearPaper: public DateComp {
-		bool perator(pointer<variant3::Paper>& tmp) override;
-	};
-	class dontHavePaper: public PersonComp {
-	public:
-		bool operator(pointer<Share::Person>& tmp) override;
-	};
 
 	class HaveMoreOnePaper: public PersonComp { 
+	private:
+		ResearchTeam& team_;
 	public:
-		bool operator(pointer<Share::Person>& tmp) override;
+		HaveMoreOnePaper(ResearchTeam& team) : team_{team} {};
+		bool operator()(pointer<Share::Person>& tmp) override;
 	};
-
-*/
 
 	template<typename T, typename Comp>
 	class input_iterator {

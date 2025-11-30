@@ -55,12 +55,12 @@ Per::equals(const T& rhs) const {
 };	
 
 bool 
-Per::operator==(const T& rhs) {
+Per::operator==(const T& rhs) const {
 	return equals(rhs);	
 };
 
 bool 
-Per::operator!=(const T& rhs) {
+Per::operator!=(const T& rhs) const {
 	return !equals(rhs);
 };
 

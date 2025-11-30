@@ -1,7 +1,6 @@
 #ifndef TEAM_H
 #define TEAM_H
 #include <string>
-#include <functional>
 #include <format>
 #include "INameAndCopy.h"
 #include "to_string.h"
@@ -11,7 +10,7 @@
 namespace variant3{
 using std::string;
 
-class Team : public variant3::INameAndCopy<Team>, Share::Equals<Team>, Share::ToString, Share::Hash {
+class Team : public variant3::INameAndCopy<Team>, public Share::Equals<Team>, public Share::ToStr, public Share::HashCode {
 protected:
 	unsigned int rnum_;
 public:
@@ -24,11 +23,11 @@ public:
 	void 
 	set_rnum(const unsigned int& rnum) noexcept;
 
-	Team 
+	Team* 
 	DeepCopy() const override ;
 
 	bool
-	equals(const Team& rhs) const override noexcept;
+	equals(const Team& rhs) const noexcept override;
 
 	bool 
 	operator==(const Team& rhs) const noexcept;
@@ -36,7 +35,7 @@ public:
 	bool 
 	operator!=(const Team& rhs) const noexcept;
 
-	int 
+	int
 	GetHashCode() const override ;
 
 	string

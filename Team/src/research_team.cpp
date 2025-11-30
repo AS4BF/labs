@@ -1,16 +1,17 @@
 #include "research_team.h"
 
 using v3Re = variant3::ResearchTeam;
+using std::vector;
 
-void	
-v3Re::vec_to_str(string& res) const 
+template<typename T> void	
+v3Re::vec_to_str(const vector<T>& vec,string& res) const 
 {
 
 	int i = 1;
 	auto it = std::back_inserter(res);
 
-	for(const auto& paper : papers_){
-		it = std::format_to(it, "{} paper\n{}", i, paper.ToString());
+	for(const auto& elem : vec){
+		it = std::format_to(it, "{} elem\n{}", i, elem.ToString());
 		i++;
 	};
 };
@@ -31,17 +32,16 @@ v3Re::frame_to_str() const
 };
 
 
-v3Re::ResearchTeam(const string& topic, const string& organization, const unsigned int& rnum, const variant3::TimeFrame& duration) : topic_{topic}, organization_{organization}, rnum_{rnum}, duration_{duration} {};
-v3Re::ResearchTeam() : topic_{"None topic"}, organization_{"None organization"}, rnum_{0}, duration_{variant3::TimeFrame::Long} {};
+v3Re::ResearchTeam(const string& topic, const string& organization, const unsigned int& rnum, const variant3::TimeFrame& duration) : Team(organization, rnum), topic_{topic}, duration_{duration} {};
+
+
+v3Re::ResearchTeam() : Team("None name", 0), topic_{"None topic"}, duration_{variant3::TimeFrame::Long} {};
 
 const string&
 v3Re::get_topic() const noexcept { return topic_; };	
 
 const string&
-v3Re::get_org() const noexcept{ return organization_; };
-
-const unsigned int&
-v3Re::get_rnum() const noexcept { return rnum_; };
+v3Re::get_org_name() const noexcept{ return name_; };
 
 const variant3::TimeFrame&
 v3Re::get_duration() const noexcept { return duration_; };
@@ -53,7 +53,7 @@ void
 v3Re::set_topic(const string& topic) { topic_ = topic; };
 
 void
-v3Re::set_org(const string& organization) { organization_ = organization; };
+v3Re::set_org_name(const string& organization) { name_ = organization; };
 
 void
 v3Re::set_duration(const variant3::TimeFrame& duration) { duration_ = duration; };
@@ -97,22 +97,87 @@ v3Re::AddPapers(vector<Paper>& papers)
 	papers_.insert(papers_.cend(), papers.begin(), papers.end());
 };
 
+const vector<Share::Person>&
+v3Re::get_persons() const {
+	return persons_;
+};
+
+void
+v3Re::set_persons(vector<Share::Person>& persons) {
+	persons_ = persons;
+};
+
+void 
+v3Re::AddMembers(vector<Share::Person>& persons){
+	persons_.insert(persons_.cend(), persons.begin(), persons.end());
+};
+
+void 
+v3Re::set_team(const Team& team) {
+	auto tmp = ResearchTeam(topic_, team.get_name(), team.get_rnum(), duration_);
+	std::swap(*this, tmp);
+};
+
+variant3::Team
+v3Re::get_team() const {
+	return *static_cast<const Team*>(this);
+};
+
+typename variant3::ResearchTeam*
+v3Re::DeepCopy() const {
+	return new ResearchTeam(*this);	
+};
+
 string 
-v3Re::ToShortString() const 
-{
+v3Re::ToShortString() const {
 
 	string res = std::format("Research topic: {}\norganization: {}\nregistration number: {}\nduration: {}\n",
-			topic_, organization_, rnum_, frame_to_str());
+			topic_, name_, rnum_, frame_to_str());
 	return res;
 };
 
 string
-v3Re::ToString() const 
-{
+v3Re::ToString() const {
 	string res = ToShortString();	
 	
-	vec_to_str(res); //дорогостоющая операция копировать vector в string
+	vec_to_str(papers_, res); //дорогостоющая операция копировать vector в string
+	vec_to_str(persons_, res);
 
 	return res;
 };
+
+template<typename T>
+using pointer = vector<T>::const_iterator;
+
+bool v3Re::deltaDateComp::operator()(pointer<variant3::Paper>& tmp) {
+	return (current_date - std::chrono::sys_days((*tmp).get_date())) < delta;
+};
+
+bool v3Re::dontHavePaper::operator()(pointer<Share::Person>& tmp) {
+	for(auto&& paper : team_.papers_) {
+		if(paper.get_author() == *tmp) {
+			return false;	
+		};
+	};
+
+	return true;
+};
+
+bool v3Re::LastYearPaper::operator()(pointer<variant3::Paper>& tmp){
+	using days = std::chrono::days;
+	return (current_date - std::chrono::sys_days((*tmp).get_date())) < days(365);
+};
+
+bool v3Re::HaveMoreOnePaper::operator()(pointer<Share::Person>& tmp){
+	unsigned int i = 0;
+	for(auto&& paper : team_.papers_){
+		if(paper.get_author() == *tmp){
+			++i;	
+			if(i>1) { return true; };	
+		};
+	};
+	
+	return false;
+};
+	
 

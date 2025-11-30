@@ -53,9 +53,9 @@ public:
 
 	bool equals(const Person& rhs) const override;	
 	
-	bool operator==(const Person& rhs);
+	bool operator==(const Person& rhs) const;
 
-	bool operator!=(const Person& rhs);
+	bool operator!=(const Person& rhs) const;
 	
 	int GetHashCode() const override;
 
