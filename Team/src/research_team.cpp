@@ -35,7 +35,7 @@ v3Re::frame_to_str() const
 v3Re::ResearchTeam(const string& topic, const string& organization, const unsigned int& rnum, const variant3::TimeFrame& duration) : Team(organization, rnum), topic_{topic}, duration_{duration} {};
 
 
-v3Re::ResearchTeam() : Team("None name", 0), topic_{"None topic"}, duration_{variant3::TimeFrame::Long} {};
+v3Re::ResearchTeam() : Team("None name research team", 0), topic_{"None topic"}, duration_{variant3::TimeFrame::Long} {};
 
 const string&
 v3Re::get_topic() const noexcept { return topic_; };	
@@ -150,10 +150,14 @@ template<typename T>
 using pointer = vector<T>::const_iterator;
 
 bool v3Re::deltaDateComp::operator()(pointer<variant3::Paper>& tmp) {
+	
+	if(tmp == end_) return true;	
 	return (current_date - std::chrono::sys_days((*tmp).get_date())) < delta;
 };
 
 bool v3Re::dontHavePaper::operator()(pointer<Share::Person>& tmp) {
+	if(tmp == end_) return true;
+
 	for(auto&& paper : team_.papers_) {
 		if(paper.get_author() == *tmp) {
 			return false;	
@@ -165,10 +169,14 @@ bool v3Re::dontHavePaper::operator()(pointer<Share::Person>& tmp) {
 
 bool v3Re::LastYearPaper::operator()(pointer<variant3::Paper>& tmp){
 	using days = std::chrono::days;
+	if(tmp == end_) return true;
+
 	return (current_date - std::chrono::sys_days((*tmp).get_date())) < days(365);
 };
 
 bool v3Re::HaveMoreOnePaper::operator()(pointer<Share::Person>& tmp){
+	if(tmp == end_) return true;
+
 	unsigned int i = 0;
 	for(auto&& paper : team_.papers_){
 		if(paper.get_author() == *tmp){

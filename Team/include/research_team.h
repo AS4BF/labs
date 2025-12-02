@@ -47,26 +47,33 @@ public: //iterators
 	using tp_sy_days = std::chrono::time_point<system_clock, days>;
 
 	class DateComp : public PaperComp {
+	protected:
+		pointer<variant3::Paper> end_;
 	public:
 		tp_sy_days current_date = std::chrono::floor<days>(system_clock::now());
+		DateComp(const ResearchTeam& team, tp_sy_days current) : end_{team.papers_.cend()}, current_date{current} {}
 	};
 
 	class deltaDateComp : public DateComp {
 	public:
-		days delta;	
+		days delta;
+		deltaDateComp(const ResearchTeam& team, const tp_sy_days& current, const days& d) : DateComp(team, current), delta{d} {}
+
 		bool operator()(pointer<variant3::Paper>& tmp) override;	
 	};
 	
 	class LastYearPaper : public DateComp {
-		tp_sy_days current_date = std::chrono::floor<days>(system_clock::now());
+	public:
+		LastYearPaper(const ResearchTeam& team, const tp_sy_days& current) : DateComp(team, current) {};
 		bool operator()(pointer<variant3::Paper>& tmp) override;
 	};
 	
 	class dontHavePaper: public PersonComp {
 	private:
 		ResearchTeam& team_;
+		pointer<Share::Person> end_;
 	public:
-		dontHavePaper(ResearchTeam& team) : team_{team} {};
+		dontHavePaper(ResearchTeam& team) : team_{team}, end_{team.persons_.cend()} {};
 		bool operator()(pointer<Share::Person>& tmp) override;
 	};
 
@@ -74,8 +81,9 @@ public: //iterators
 	class HaveMoreOnePaper: public PersonComp { 
 	private:
 		ResearchTeam& team_;
+		pointer<Share::Person> end_;
 	public:
-		HaveMoreOnePaper(ResearchTeam& team) : team_{team} {};
+		HaveMoreOnePaper(ResearchTeam& team) : team_{team}, end_{team.persons_.cend()} {};
 		bool operator()(pointer<Share::Person>& tmp) override;
 	};
 
@@ -132,6 +140,8 @@ public:
 	//ctor default init vector	
 	ResearchTeam(const string& topic, const string& organization, const unsigned int& rnum, const TimeFrame& duration);
 	ResearchTeam();
+
+	~ResearchTeam() override;
 
 	const string&
 	get_topic() const noexcept;	
