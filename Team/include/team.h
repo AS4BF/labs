@@ -21,7 +21,7 @@ public:
 	get_rnum() const noexcept;	
 
 	void 
-	set_rnum(const unsigned int& rnum) noexcept;
+	set_rnum(const int& rnum); 
 
 	Team* 
 	DeepCopy() const override ;

@@ -16,7 +16,10 @@ Team::get_rnum() const noexcept {
 };
 
 void
-Team::set_rnum(const unsigned int& rnum) noexcept {
+Team::set_rnum(const int& rnum) {
+	if(rnum <= 0){
+		throw string("NULL");	
+	};
 	rnum_ = rnum;	
 };
 
