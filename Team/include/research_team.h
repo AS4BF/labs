@@ -98,7 +98,7 @@ public: //iterators
 		pointer pT_;
 		std::unique_ptr<Comp> comparator_;
 	public: 
-		input_iterator(pointer pT, std::unique_ptr<Comp> comparator) : pT_{pT}, comparator_{std::move(comparator)} {};
+		input_iterator(pointer pT, std::unique_ptr<Comp> comparator) : pT_{pT}, comparator_{std::move(comparator)} { while(!(*comparator_)(pT_)) { pT_++; }; };//to first elem == true };
 		
 		reference operator*() {
 			return *pT_; };
@@ -109,7 +109,7 @@ public: //iterators
 			//begin() == true -> else error
 			do { 
 				++tmp;
-			} while(!comparator_(tmp)); 
+			} while(!(*comparator_)(tmp)); 
 
 			std::swap(pT_, tmp);
 
@@ -124,6 +124,10 @@ public: //iterators
 
 		pointer operator->() {
 			return pT_;	
+		};
+
+		bool operator!=(const input_iterator& rhs) {
+			return pT_ != rhs.pT_;	
 		};
 
 	};
